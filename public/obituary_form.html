@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Obituary</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/submit_obituary_form">Submit Obituary</a></li>
+            <li><a href="/view_obituaries">View Obituaries</a></li>
+        </ul>
+    </nav>
+    <h1>Submit Obituary</h1>
+    <form id="obituaryForm" method="POST" action="/submit_obituary">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br>
+
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="date_of_birth" required><br>
+
+        <label for="dod">Date of Death:</label>
+        <input type="date" id="dod" name="date_of_death" required><br>
+
+        <label for="content">Content:</label>
+        <textarea id="content" name="content" required></textarea><br>
+
+        <label for="author">Author:</label>
+        <input type="text" id="author" name="author" required><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.getElementById('obituaryForm').addEventListener('submit', function(event) {
+            // Get form values
+            const name = document.getElementById('name').value;
+            const dob = new Date(document.getElementById('dob').value);
+            const dod = new Date(document.getElementById('dod').value);
+            const content = document.getElementById('content').value;
+
+            // Validate name length
+            if (name.length <= 5) {
+                alert('Name must be more than 5 characters.');
+                event.preventDefault();
+                return;
+            }
+
+            // Validate dates
+            if (dod <= dob) {
+                alert('Date of death must be after date of birth.');
+                event.preventDefault();
+                return;
+            }
+
+            // Validate content word count
+            const wordCount = content.trim().split(/\s+/).length;
+            if (wordCount < 10) {
+                alert('Content must be at least 10 words.');
+                event.preventDefault();
+                return;
+            }
+        });
+    </script>
+</body>
+</html>
