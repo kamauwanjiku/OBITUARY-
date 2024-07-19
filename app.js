@@ -8,8 +8,8 @@ const port = 3000;
 // MySQL Connection
 const connection = mysql.createConnection({
     host: 'localhost',
-    user: 'root', // default username for XAMPP MySQL
-    password: '', // default password for XAMPP MySQL is empty
+    user: 'root',
+    password: '',
     database: 'obituary_platform'
 });
 
@@ -24,8 +24,6 @@ connection.connect((err) => {
 // Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
-
-// Routes
 
 // Serve the obituary form
 app.get('/submit_obituary_form', (req, res) => {
@@ -64,6 +62,14 @@ app.get('/view_obituaries', (req, res) => {
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Obituaries</title>
                 <link rel="stylesheet" href="/styles.css">
+                <meta name="description" content="Obituaries and remembrances.">
+                <meta name="keywords" content="obituaries, remembrances, memorials">
+                <meta property="og:title" content="Obituaries">
+                <meta property="og:description" content="Obituaries and remembrances.">
+                <meta property="og:type" content="website">
+                <meta property="og:url" content="http://localhost:${port}/view_obituaries">
+                <meta property="og:image" content="/path/to/image.jpg">
+                <link rel="canonical" href="http://localhost:${port}/view_obituaries">
             </head>
             <body>
                 <nav>
@@ -73,28 +79,30 @@ app.get('/view_obituaries', (req, res) => {
                     </ul>
                 </nav>
                 <h1>Obituaries</h1>
-                <table>
-                    <tr>
-                        <th>Name</th>
-                        <th>Date of Birth</th>
-                        <th>Date of Death</th>
-                        <th>Content</th>
-                        <th>Author</th>
-                        <th>Submission Date</th>
-                    </tr>`;
+                <div class="obituaries-container">`;
+
         results.forEach(obituary => {
             html += `
-                    <tr>
-                        <td>${obituary.name}</td>
-                        <td>${obituary.date_of_birth}</td>
-                        <td>${obituary.date_of_death}</td>
-                        <td>${obituary.content}</td>
-                        <td>${obituary.author}</td>
-                        <td>${obituary.submission_date}</td>
-                    </tr>`;
+                    <article>
+                        <header>
+                            <h2>${obituary.name}</h2>
+                        </header>
+                        <p><strong>Date of Birth:</strong> ${obituary.date_of_birth}</p>
+                        <p><strong>Date of Death:</strong> ${obituary.date_of_death}</p>
+                        <p>${obituary.content}</p>
+                        <footer>
+                            <p><strong>Author:</strong> ${obituary.author}</p>
+                            <p><strong>Submission Date:</strong> ${obituary.submission_date}</p>
+                        </footer>
+                        <div class="social-share">
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:${port}/view_obituaries/${obituary.slug}" target="_blank">Share on Facebook</a>
+                            <a href="https://twitter.com/intent/tweet?url=http://localhost:${port}/view_obituaries/${obituary.slug}&text=Check out this obituary: ${obituary.name}" target="_blank">Share on Twitter</a>
+                        </div>
+                    </article>`;
         });
+
         html += `
-                </table>
+                </div>
             </body>
             </html>`;
         res.send(html);
